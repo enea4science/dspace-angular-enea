@@ -61,11 +61,4 @@ export class TruncatableComponent {
     }
   }
 
-  /**
-   * Expands the truncatable when it's collapsed, collapses it when it's expanded
-   */
-  public toggle() {
-    this.service.toggle(this.id);
-  }
-
 }

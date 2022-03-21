@@ -49,6 +49,14 @@ export class TruncatablePartComponent implements OnInit, OnDestroy {
    * Subscription to unsubscribe from
    */
   private sub;
+  /**
+   * store variable used for local to expand collapse
+   */
+  expand = false;
+  /**
+   * variable to check if expandable
+   */
+  expandable = false;
 
   public constructor(private service: TruncatableService) {
   }
@@ -67,10 +75,34 @@ export class TruncatablePartComponent implements OnInit, OnDestroy {
     this.sub = this.service.isCollapsed(this.id).subscribe((collapsed: boolean) => {
       if (collapsed) {
         this.lines = this.minLines.toString();
+        this.expand = false;
       } else {
         this.lines = this.maxLines < 0 ? 'none' : this.maxLines.toString();
+        this.expand = true;
       }
     });
+  }
+
+  ngAfterContentChecked() {
+    const ps = document.querySelectorAll('#dontBreakContent');
+    const observer = new (window as any).ResizeObserver(entries => {
+      // tslint:disable-next-line:prefer-const
+      for (let entry of entries) {
+        entry.target.classList[entry.target.scrollHeight > entry.contentRect.height ? 'add' : 'remove']('truncated');
+      }
+    });
+
+    ps.forEach(p => {
+      observer.observe(p);
+    });
+  }
+
+  /**
+   * Expands the truncatable when it's collapsed, collapses it when it's expanded
+   */
+  public toggle() {
+    this.service.toggle(this.id);
+    this.expandable = !this.expandable;
   }
 
   /**
