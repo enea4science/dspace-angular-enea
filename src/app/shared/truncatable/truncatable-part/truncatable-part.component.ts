@@ -1,6 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { TruncatableService } from '../truncatable.service';
 import { hasValue } from '../../empty.util';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { NativeWindowRef, NativeWindowService } from 'src/app/core/services/window.service';
 
 @Component({
   selector: 'ds-truncatable-part',
@@ -57,8 +59,15 @@ export class TruncatablePartComponent implements OnInit, OnDestroy {
    * variable to check if expandable
    */
   expandable = false;
+  isBrowser: boolean;
 
-  public constructor(private service: TruncatableService) {
+  public constructor(
+    private service: TruncatableService,
+    @Inject(DOCUMENT) private document: any,
+    @Inject(NativeWindowService) private _window: NativeWindowRef,
+    @Inject(PLATFORM_ID) platformId: object
+    ) {
+      this.isBrowser = isPlatformBrowser(platformId);
   }
 
   /**
@@ -84,17 +93,29 @@ export class TruncatablePartComponent implements OnInit, OnDestroy {
   }
 
   ngAfterContentChecked() {
-    const ps = document.querySelectorAll('#dontBreakContent');
-    const observer = new (window as any).ResizeObserver(entries => {
+    if (this.isBrowser) {
+      let ps;
+      let observer;
+      [ps, observer] = this.getObserve();
+
+      ps.forEach(p => {
+        observer.observe(p);
+      });
+    }
+  }
+
+  /**
+   * Function to get data to be observed
+   */
+  getObserve() {
+    const ps = this.document.querySelectorAll('#dontBreakContent');
+    const observer = new (this._window.nativeWindow as any).ResizeObserver(entries => {
       // tslint:disable-next-line:prefer-const
       for (let entry of entries) {
         entry.target.classList[entry.target.scrollHeight > entry.contentRect.height ? 'add' : 'remove']('truncated');
       }
     });
-
-    ps.forEach(p => {
-      observer.observe(p);
-    });
+    return [ps, observer];
   }
 
   /**
@@ -111,6 +132,15 @@ export class TruncatablePartComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (hasValue(this.sub)) {
       this.sub.unsubscribe();
+    }
+    if (this.isBrowser) {
+      let ps;
+      let observer;
+      [ps, observer] = this.getObserve();
+
+      ps.forEach(p => {
+        observer.unobserve(p);
+      });
     }
   }
 }
