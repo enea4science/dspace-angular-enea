@@ -59,7 +59,18 @@ export class TruncatablePartComponent implements OnInit, OnDestroy {
    * variable to check if expandable
    */
   expandable = false;
+  /**
+   * variable to check if it is a browser
+   */
   isBrowser: boolean;
+  /**
+   * variable which save get observer
+   */
+  observer;
+  /**
+   * variable to save content to be observed
+   */
+  observedContent;
 
   public constructor(
     private service: TruncatableService,
@@ -94,29 +105,37 @@ export class TruncatablePartComponent implements OnInit, OnDestroy {
 
   ngAfterContentChecked() {
     if (this.isBrowser) {
-      let ps;
-      let observer;
-      [ps, observer] = this.getObserve();
-
-      ps.forEach(p => {
-        observer.observe(p);
-      });
+      if (this.observer && this.observedContent) {
+        this.toUnobserve();
+      }
+      this.toObserve();
     }
   }
 
   /**
    * Function to get data to be observed
    */
-  getObserve() {
-    const ps = this.document.querySelectorAll('#dontBreakContent');
-    const observer = new (this._window.nativeWindow as any).ResizeObserver(entries => {
+  toObserve() {
+    this.observedContent = this.document.querySelectorAll('#dontBreakContent');
+    this.observer = new (this._window.nativeWindow as any).ResizeObserver(entries => {
       // tslint:disable-next-line:prefer-const
       for (let entry of entries) {
         entry.target.classList[entry.target.scrollHeight > entry.contentRect.height ? 'add' : 'remove']('truncated');
       }
     });
-    return [ps, observer];
+    this.observedContent.forEach(p => {
+      this.observer.observe(p);
+    });
   }
+
+  /**
+   * Function to remove data which is observed
+   */
+   toUnobserve() {
+    this.observedContent.forEach(p => {
+      this.observer.unobserve(p);
+    });
+   }
 
   /**
    * Expands the truncatable when it's collapsed, collapses it when it's expanded
@@ -134,13 +153,7 @@ export class TruncatablePartComponent implements OnInit, OnDestroy {
       this.sub.unsubscribe();
     }
     if (this.isBrowser) {
-      let ps;
-      let observer;
-      [ps, observer] = this.getObserve();
-
-      ps.forEach(p => {
-        observer.unobserve(p);
-      });
+      this.toUnobserve();
     }
   }
 }
