@@ -1,5 +1,5 @@
 import {
-  Component, Input
+  Component, ElementRef, Input
 } from '@angular/core';
 import { TruncatableService } from './truncatable.service';
 
@@ -29,7 +29,7 @@ export class TruncatableComponent {
    */
   @Input() onHover = false;
 
-  public constructor(private service: TruncatableService) {
+  public constructor(private service: TruncatableService, private el: ElementRef,) {
   }
 
   /**
@@ -59,6 +59,11 @@ export class TruncatableComponent {
     if (this.onHover) {
       this.service.expand(this.id);
     }
+  }
+
+  ngAfterViewChecked() {
+    console.log('ds-truncatable-part#' + this.id);
+    console.log(this.el.nativeElement.querySelectorAll('#expandButton:not([style*="display:none"]):not([style*="display: none"])'));
   }
 
 }
