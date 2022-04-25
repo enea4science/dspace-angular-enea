@@ -120,20 +120,21 @@ export class TruncatablePartComponent implements OnInit, OnDestroy {
     this.observer = new (this._window.nativeWindow as any).ResizeObserver(entries => {
       // tslint:disable-next-line:prefer-const
       for (let entry of entries) {
-        if (entry.target.scrollHeight > entry.contentRect.height) {
-          if (entry.target.children.length > 0) {
-            if (entry.target.children[0].offsetHeight > entry.contentRect.height) {
-              entry.target.classList.add('truncated');
+        if (!entry.target.classList.contains('notruncatable')) {
+          if (entry.target.scrollHeight > entry.contentRect.height) {
+            if (entry.target.children.length > 0) {
+              if (entry.target.children[0].offsetHeight > entry.contentRect.height) {
+                entry.target.classList.add('truncated');
+              } else {
+                entry.target.classList.remove('truncated');
+              }
             } else {
-              entry.target.classList.remove('truncated');
+              entry.target.classList.add('truncated');
             }
           } else {
-            entry.target.classList.add('truncated');
+            entry.target.classList.remove('truncated');
           }
-        } else {
-          entry.target.classList.remove('truncated');
         }
-        // entry.target.classList[entry.target.scrollHeight > entry.contentRect.height ? 'add' : 'remove']('truncated');
       }
     });
     this.observedContent.forEach(p => {

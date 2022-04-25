@@ -1,6 +1,4 @@
-import {
-  Component, ElementRef, Input
-} from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnInit } from '@angular/core';
 import { TruncatableService } from './truncatable.service';
 
 @Component({
@@ -13,7 +11,7 @@ import { TruncatableService } from './truncatable.service';
 /**
  * Component that represents a section with one or more truncatable parts that all listen to this state
  */
-export class TruncatableComponent {
+export class TruncatableComponent implements OnInit, AfterViewChecked {
   /**
    * Is true when all truncatable parts in this truncatable should be expanded on loading
    */
@@ -62,8 +60,13 @@ export class TruncatableComponent {
   }
 
   ngAfterViewChecked() {
-    console.log('ds-truncatable-part#' + this.id);
-    console.log(this.el.nativeElement.querySelectorAll('#expandButton:not([style*="display:none"]):not([style*="display: none"])'));
+    const truncatedElements = this.el.nativeElement.querySelectorAll('.truncated');
+    if (truncatedElements?.length > 1) {
+      for (let i = 0; i < (truncatedElements.length - 1); i++) {
+        truncatedElements[i].classList.remove('truncated');
+        truncatedElements[i].classList.add('notruncatable');
+      }
+    }
   }
 
 }
