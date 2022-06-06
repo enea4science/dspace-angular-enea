@@ -14,7 +14,6 @@ import { MissingTranslationHandler, TranslateModule } from '@ngx-translate/core'
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FileUploadModule } from 'ng2-file-upload';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { TextMaskModule } from 'angular2-text-mask';
 import { MomentModule } from 'ngx-moment';
 import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
 import { ExportMetadataSelectorComponent } from './dso-selector/modal-wrappers/export-metadata-selector/export-metadata-selector.component';
@@ -112,6 +111,7 @@ import { FilterInputSuggestionsComponent } from './input-suggestions/filter-sugg
 import { DsoInputSuggestionsComponent } from './input-suggestions/dso-input-suggestions/dso-input-suggestions.component';
 import { ItemGridElementComponent } from './object-grid/item-grid-element/item-types/item/item-grid-element.component';
 import { TypeBadgeComponent } from './object-list/type-badge/type-badge.component';
+import { AccessStatusBadgeComponent } from './object-list/access-status-badge/access-status-badge.component';
 import { MetadataRepresentationLoaderComponent } from './metadata-representation/metadata-representation-loader.component';
 import { MetadataRepresentationDirective } from './metadata-representation/metadata-representation.directive';
 import { ListableObjectComponentLoaderComponent } from './object-collection/shared/listable-object/listable-object-component-loader.component';
@@ -173,10 +173,12 @@ import { BitstreamRequestACopyPageComponent } from './bitstream-request-a-copy-p
 import { DsSelectComponent } from './ds-select/ds-select.component';
 import { LogInOidcComponent } from './log-in/methods/oidc/log-in-oidc.component';
 import { ThemedItemListPreviewComponent } from './object-list/my-dspace-result-list-element/item-list-preview/themed-item-list-preview.component';
+import { RSSComponent } from './rss-feed/rss.component';
+import { ExternalLinkMenuItemComponent } from './menu/menu-item/external-link-menu-item.component';
+import { BrowserOnlyPipe } from './utils/browser-only.pipe';
 import { LogInOrcidComponent } from './log-in/methods/orcid/log-in-orcid.component';
 
 const MODULES = [
-  // Do NOT include UniversalModule, HttpModule, or JsonpModule here
   CommonModule,
   SortablejsModule,
   FileUploadModule,
@@ -194,7 +196,6 @@ const MODULES = [
   RouterModule,
   NouisliderModule,
   MomentModule,
-  TextMaskModule,
   DragDropModule,
   CdkTreeModule
 ];
@@ -217,7 +218,8 @@ const PIPES = [
   ObjectKeysPipe,
   ObjectValuesPipe,
   ConsolePipe,
-  ObjNgFor
+  ObjNgFor,
+  BrowserOnlyPipe,
 ];
 
 const COMPONENTS = [
@@ -240,6 +242,7 @@ const COMPONENTS = [
   AbstractListableElementComponent,
   ObjectCollectionComponent,
   PaginationComponent,
+  RSSComponent,
   SearchFormComponent,
   PageWithSidebarComponent,
   SidebarDropdownComponent,
@@ -295,6 +298,7 @@ const COMPONENTS = [
   AbstractTrackableComponent,
   ComcolMetadataComponent,
   TypeBadgeComponent,
+  AccessStatusBadgeComponent,
   BrowseByComponent,
   AbstractTrackableComponent,
 
@@ -402,6 +406,7 @@ const ENTRY_COMPONENTS = [
   OnClickMenuItemComponent,
   TextMenuItemComponent,
   ScopeSelectorModalComponent,
+  ExternalLinkMenuItemComponent,
 ];
 
 const SHARED_ITEM_PAGE_COMPONENTS = [
