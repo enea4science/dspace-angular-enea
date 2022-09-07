@@ -3,7 +3,7 @@ import { Point, UsageReport } from '../../core/statistics/models/usage-report.mo
 import { Observable, of } from 'rxjs';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 import { map } from 'rxjs/operators';
-import { getRemoteDataPayload, getFirstSucceededRemoteData } from '../../core/shared/operators';
+import { getFirstSucceededRemoteData, getRemoteDataPayload } from '../../core/shared/operators';
 import { DSpaceObjectDataService } from '../../core/data/dspace-object-data.service';
 
 /**
@@ -58,6 +58,8 @@ export class StatisticsTableComponent implements OnInit {
           getRemoteDataPayload(),
           map((item) => this.nameService.getName(item)),
         );
+      case 'TotalDownloads':
+        return of(point.id);
       case 'TopCities':
       case 'topCountries':
       default:
