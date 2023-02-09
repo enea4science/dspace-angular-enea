@@ -103,18 +103,6 @@ export class ItemStatusComponent implements OnInit {
           }),
         );
 
-        // Observable for configuration determining whether the Register DOI feature is enabled
-        let registerConfigEnabled$: Observable<boolean> = this.configurationService.findByPropertyName('identifiers.item-status.register-doi').pipe(
-          getFirstSucceededRemoteData(),
-          getRemoteDataPayload(),
-          map((enabled: ConfigurationProperty) => {
-            if (enabled !== undefined && enabled.values) {
-              return true;
-            }
-            return false;
-          })
-        );
-
         /*
         Construct a base list of operations.
           The key is used to build messages
@@ -146,7 +134,7 @@ export class ItemStatusComponent implements OnInit {
         return this.identifierDataService.getIdentifierDataFor(item).pipe(
           getFirstSucceededRemoteData(),
           getRemoteDataPayload(),
-          mergeMap((data: IdentifierData) => {
+          map((data: IdentifierData) => {
             let identifiers = data.identifiers;
             let no_doi = true;
             let pending = false;
@@ -165,12 +153,8 @@ export class ItemStatusComponent implements OnInit {
                 }
               });
             }
-            // If there is no DOI, or a pending/minted/null DOI, and the config is enabled, return true
-            return registerConfigEnabled$.pipe(
-              map((enabled: boolean) => {
-                  return enabled && (pending || no_doi);
-                }
-              ));
+          // If there is no DOI, or a pending/minted/null DOI, return true
+          return (pending || no_doi);
           }),
           // Switch map pushes the register DOI operation onto a copy of the base array then returns to the pipe
           switchMap((showDoi: boolean) => {
