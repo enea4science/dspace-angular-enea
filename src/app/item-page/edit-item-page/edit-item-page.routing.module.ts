@@ -42,6 +42,7 @@ import { ItemPageCollectionMapperGuard } from './item-page-collection-mapper.gua
 import { ItemUnlinkOrcidComponent } from './item-unlink-orcid/item-unlink-orcid.component';
 import { ItemPageUnlinkOrcidGuard } from './item-page-unlink-orcid.guard';
 import { EditItemResolver } from './../../core/shared/resolvers/edit-item.resolver';
+import { ItemCurateComponent } from './item-curate/item-curate.component';
 
 /**
  * Routing module that handles the routing for the Edit Item page administrator functionality
@@ -83,6 +84,11 @@ import { EditItemResolver } from './../../core/shared/resolvers/edit-item.resolv
                 component: ItemMetadataComponent,
                 data: { title: 'item.edit.tabs.metadata.title', showBreadcrumbs: true },
                 canActivate: [ItemPageMetadataGuard]
+              },
+              {
+                path: 'curate',
+                component: ItemCurateComponent,
+                data: { title: 'item.edit.tabs.curate.title', showBreadcrumbs: true }
               },
               {
                 path: 'relationships',

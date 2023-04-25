@@ -39,6 +39,7 @@ import { ResourcePoliciesModule } from '../../shared/resource-policies/resource-
 import { ItemUnlinkOrcidComponent } from './item-unlink-orcid/item-unlink-orcid.component';
 import { EditMetadataSecurityComponent } from './edit-metadata-security/edit-metadata-security.component';
 import { EditItemResolver } from '../../core/shared/resolvers/edit-item.resolver';
+import { ItemCurateComponent } from './item-curate/item-curate.component';
 
 /**
  * Module that contains all components related to the Edit Item page administrator functionality
@@ -83,7 +84,7 @@ import { EditItemResolver } from '../../core/shared/resolvers/edit-item.resolver
     ItemEditBitstreamDragHandleComponent,
     VirtualMetadataComponent,
     ItemAuthorizationsComponent,
-
+    ItemCurateComponent
   ],
   providers: [
     BundleDataService,
